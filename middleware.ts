@@ -29,11 +29,12 @@ export async function middleware(req: NextRequest) {
   } = await supabase.auth.getSession()
 
   const protectedPaths = ['/dashboard']
-  const authPaths = ['/auth/login', '/auth/signup']
+  const authPaths = ['/auth/login', '/auth/signup', '/auth/email-password', '/auth/otp', '/auth/otp-verify']
+  const onboardingPath = '/auth/onboarding'
 
   const isProtectedPath = protectedPaths.some(path => req.nextUrl.pathname.startsWith(path))
   const isAuthPath = authPaths.some(path => req.nextUrl.pathname.startsWith(path))
-  const isOnboardingPath = req.nextUrl.pathname.startsWith('/auth/onboarding')
+  const isOnboardingPath = req.nextUrl.pathname.startsWith(onboardingPath)
 
   if (isProtectedPath && !session) {
     return NextResponse.redirect(new URL('/auth/login', req.url))
@@ -51,5 +52,13 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/auth/login', '/auth/signup', '/auth/onboarding']
+  matcher: [
+    '/dashboard/:path*',
+    '/auth/login',
+    '/auth/signup',
+    '/auth/email-password',
+    '/auth/otp',
+    '/auth/otp-verify',
+    '/auth/onboarding'
+  ]
 }
