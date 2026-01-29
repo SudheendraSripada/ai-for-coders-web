@@ -45,8 +45,11 @@ export default function OtpForm({ title = 'Sign in with OTP', subtitle = 'Enter 
         throw new Error(data.error || 'Failed to send OTP')
       }
 
-      setMessage('OTP sent! Check your email.')
-      router.push(`/auth/otp-verify?email=${encodeURIComponent(email)}`)
+      setMessage('OTP sent! Check your email (including spam folder).')
+      // Redirect to verification page
+      setTimeout(() => {
+        router.push(`/auth/otp-verify?email=${encodeURIComponent(email)}`)
+      }, 1500)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
