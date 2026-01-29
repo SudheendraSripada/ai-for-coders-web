@@ -66,7 +66,7 @@ export default function EmailPasswordPage() {
       setSuccess(true)
       // Don't redirect immediately, show success message first
       setTimeout(() => {
-        router.push('/auth/otp')
+        router.push('/verify-email')
       }, 3000)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')

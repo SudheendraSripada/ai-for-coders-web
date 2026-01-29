@@ -28,16 +28,32 @@ export async function middleware(req: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession()
 
-  const protectedPaths = ['/dashboard']
-  const authPaths = ['/auth/login', '/auth/signup', '/auth/email-password', '/auth/otp', '/auth/otp-verify', '/auth/callback']
+  const protectedPaths = ['/dashboard', '/explore']
+  const authPaths = [
+    '/auth/login',
+    '/auth/signup',
+    '/auth/email-password',
+    '/auth/otp',
+    '/auth/otp-verify',
+    '/auth/magic-link',
+  ]
   const onboardingPath = '/auth/onboarding'
 
-  const isProtectedPath = protectedPaths.some(path => req.nextUrl.pathname.startsWith(path))
-  const isAuthPath = authPaths.some(path => req.nextUrl.pathname.startsWith(path))
+  const isProtectedPath = protectedPaths.some((path) => req.nextUrl.pathname.startsWith(path))
+  const isAuthPath = authPaths.some((path) => req.nextUrl.pathname.startsWith(path))
   const isOnboardingPath = req.nextUrl.pathname.startsWith(onboardingPath)
 
   if (isProtectedPath && !session) {
     return NextResponse.redirect(new URL('/auth/login', req.url))
+  }
+
+  if (isProtectedPath && session) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    if (user && !user.email_confirmed_at) {
+      return NextResponse.redirect(new URL('/verify-email', req.url))
+    }
   }
 
   if (isAuthPath && session) {
@@ -54,12 +70,14 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     '/dashboard/:path*',
+    '/explore/:path*',
     '/auth/login',
     '/auth/signup',
     '/auth/email-password',
     '/auth/otp',
     '/auth/otp-verify',
-    '/auth/callback',
-    '/auth/onboarding'
-  ]
+    '/auth/magic-link',
+    '/auth/onboarding',
+    '/verify-email',
+  ],
 }

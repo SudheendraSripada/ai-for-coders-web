@@ -1,9 +1,16 @@
-import { createClient } from '@supabase/supabase-js'
+import { createBrowserClient } from '@supabase/ssr'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export function createClient() {
+  return createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+}
+
+export const supabase = createClient()
 
 export type { UserProfile, Language, Course, Lesson, Task, UserProgress } from '@/lib/types'
 
@@ -16,7 +23,7 @@ export async function signUpWithEmail(email: string, password: string) {
       email,
       password,
       options: {
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
+        emailRedirectTo: 'https://ai-for-coders-web-pi.vercel.app/welcome',
       },
     })
 
@@ -27,13 +34,13 @@ export async function signUpWithEmail(email: string, password: string) {
   }
 }
 
-// Sign in with OTP
+// Sign in with OTP (magic link)
 export async function signInWithOTP(email: string) {
   try {
     const { data, error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?email=${encodeURIComponent(email)}`,
+        emailRedirectTo: 'https://ai-for-coders-web-pi.vercel.app/dashboard',
       },
     })
 
