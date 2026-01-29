@@ -304,7 +304,7 @@ export default function LessonPage() {
                       .map(p => ({ id: p.id, completed: p.completed }))
                   })) || []}
                   currentLessonId={selectedTask?.id}
-                  completedLessonIds={progress.filter(p => p.completed).map(p => p.task_id)}
+                  completedLessonIds={progress.filter(p => p.completed && p.task_id !== null).map(p => p.task_id as number)}
                 />
               </div>
             </div>

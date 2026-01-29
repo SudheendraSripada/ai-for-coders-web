@@ -1,11 +1,13 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { Shield, CheckCircle, AlertCircle } from 'lucide-react'
 
-export default function AuthCallback() {
+export const dynamic = 'force-dynamic'
+
+function AuthCallbackContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading')
@@ -73,10 +75,10 @@ export default function AuthCallback() {
             }
 
             setStatus('success')
-            setMessage('OTP verified successfully! Redirecting to dashboard...')
+            setMessage('OTP verified successfully! Redirecting...')
             
             setTimeout(() => {
-              router.push('/dashboard')
+              router.push('/welcome')
             }, 2000)
             return
           }
@@ -122,10 +124,10 @@ export default function AuthCallback() {
             }
 
             setStatus('success')
-            setMessage('Email verified successfully! Redirecting to dashboard...')
+            setMessage('Email verified successfully! Redirecting...')
             
             setTimeout(() => {
-              router.push('/dashboard')
+              router.push('/welcome')
             }, 2000)
             return
           }
@@ -133,9 +135,9 @@ export default function AuthCallback() {
 
         // If no code/token, check if user is already authenticated
         const { data: { user } } = await supabase.auth.getUser()
-        if (user) {
+        if (user && user.email_confirmed_at) {
           console.log('User already authenticated:', user.email)
-          router.push('/dashboard')
+          router.push('/welcome')
           return
         }
 
@@ -190,5 +192,13 @@ export default function AuthCallback() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function AuthCallback() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center">Loading...</div>}>
+      <AuthCallbackContent />
+    </Suspense>
   )
 }

@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import ProgressTracker from '@/components/ProgressTracker'
-import { Lesson } from '@/lib/types'
+import { Lesson, Course } from '@/lib/types'
 import { ArrowLeft, BookOpen, Clock, CheckCircle } from 'lucide-react'
 
 interface CourseData {
@@ -134,7 +134,7 @@ export default function CoursePage() {
                     </div>
                     <div className="flex items-center text-sm text-gray-500">
                       <BookOpen className="mr-1 h-4 w-4" />
-                      <span>{lesson.tasks?.length || 0} tasks</span>
+                      <span>View lesson</span>
                     </div>
                   </Link>
                 ))}
@@ -153,7 +153,7 @@ export default function CoursePage() {
                     <div className="flex items-center justify-between">
                       <span className="text-gray-600">Total Tasks</span>
                       <span className="font-medium text-gray-900">
-                        {course.lessons.reduce((acc, l) => acc + (l.tasks?.length || 0), 0)}
+                        {course.lessons.length}
                       </span>
                     </div>
                     {course.duration_hours && (
@@ -177,7 +177,7 @@ export default function CoursePage() {
                     title: l.title,
                     slug: l.slug,
                     order_index: l.order_index,
-                    tasks: l.tasks?.map(t => ({ id: t.id }))
+                    tasks: []
                   }))}
                 />
               </div>
