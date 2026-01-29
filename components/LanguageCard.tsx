@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { Code2 } from 'lucide-react'
 import { Language } from '@/lib/types'
+import type { ReactElement } from 'react'
 
 interface LanguageCardProps {
   language: Language
@@ -14,7 +15,7 @@ const languageColors: Record<string, string> = {
   c: 'from-gray-500 to-gray-600'
 }
 
-const languageIcons: Record<string, JSX.Element> = {
+const languageIcons: Record<string, ReactElement> = {
   python: <Code2 className="h-8 w-8 text-white" />,
   java: <Code2 className="h-8 w-8 text-white" />,
   c: <Code2 className="h-8 w-8 text-white" />

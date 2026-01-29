@@ -23,7 +23,7 @@ export async function signUpWithEmail(email: string, password: string) {
       email,
       password,
       options: {
-        emailRedirectTo: 'https://ai-for-coders-web-pi.vercel.app/welcome',
+        emailRedirectTo: 'https://ai-for-coders-web-pi.vercel.app/auth/confirm',
       },
     })
 
@@ -40,7 +40,7 @@ export async function signInWithOTP(email: string) {
     const { data, error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: 'https://ai-for-coders-web-pi.vercel.app/dashboard',
+        emailRedirectTo: 'https://ai-for-coders-web-pi.vercel.app/auth/confirm',
       },
     })
 

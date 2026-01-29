@@ -42,7 +42,7 @@ export default function LoginPage() {
         throw new Error(data.error || 'Failed to log in')
       }
 
-      router.push('/dashboard')
+      // DO NOT redirect here - AuthProvider will handle it automatically
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {

@@ -36,6 +36,8 @@ export async function middleware(req: NextRequest) {
     '/auth/otp',
     '/auth/otp-verify',
     '/auth/magic-link',
+    '/auth/confirm',
+    '/auth/callback',
   ]
   const onboardingPath = '/auth/onboarding'
 
@@ -77,7 +79,10 @@ export const config = {
     '/auth/otp',
     '/auth/otp-verify',
     '/auth/magic-link',
+    '/auth/confirm',
+    '/auth/callback',
     '/auth/onboarding',
     '/verify-email',
+    '/welcome',
   ],
 }
