@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
       email,
       password,
       options: {
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/onboarding`
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`
       }
     })
 
@@ -28,25 +28,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (data.user && data.session) {
-      const { error: profileError } = await supabase
-        .from('user_profiles')
-        .insert({
-          id: data.user.id,
-          email: data.user.email!,
-          experience_level: null,
-          learning_goals: null
-        })
-
-      if (profileError) {
-        console.error('Profile creation error:', profileError)
-      }
-    }
+    // Don't create profile here - let the callback handle it after email verification
+    // The user needs to verify their email first
 
     return NextResponse.json({
       success: true,
-      user: data.user,
-      session: data.session
+      message: 'Please check your email to verify your account before signing in.',
+      user: data.user
     })
   } catch (error) {
     console.error('Signup error:', error)

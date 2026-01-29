@@ -16,6 +16,7 @@ export default function EmailPasswordPage() {
   })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
 
   const validateForm = (): string | null => {
     if (!formData.email || !formData.email.includes('@')) {
@@ -36,6 +37,7 @@ export default function EmailPasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    setSuccess(false)
     setLoading(true)
 
     const validationError = validateForm()
@@ -61,7 +63,11 @@ export default function EmailPasswordPage() {
         throw new Error(data.error || 'Failed to create account')
       }
 
-      router.push('/auth/onboarding')
+      setSuccess(true)
+      // Don't redirect immediately, show success message first
+      setTimeout(() => {
+        router.push('/auth/otp')
+      }, 3000)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
@@ -75,6 +81,14 @@ export default function EmailPasswordPage() {
         {error && (
           <div className="rounded-md bg-red-50 p-4">
             <p className="text-sm text-red-800">{error}</p>
+          </div>
+        )}
+
+        {success && (
+          <div className="rounded-md bg-green-50 p-4">
+            <p className="text-sm text-green-800">
+              Account created successfully! Please check your email to verify your account before signing in.
+            </p>
           </div>
         )}
         <div className="space-y-4">

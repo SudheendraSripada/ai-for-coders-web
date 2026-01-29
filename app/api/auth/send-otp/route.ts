@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/otp-verify?email=${encodeURIComponent(email)}`
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?email=${encodeURIComponent(email)}`
       }
     })
 
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'OTP sent to your email'
+      message: 'OTP sent to your email. Check your inbox (including spam folder).'
     })
   } catch (error) {
     console.error('OTP send error:', error)

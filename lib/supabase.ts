@@ -7,6 +7,96 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export type { UserProfile, Language, Course, Lesson, Task, UserProgress } from '@/lib/types'
 
+// Authentication helper functions
+
+// Sign up with email + password
+export async function signUpWithEmail(email: string, password: string) {
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
+      },
+    })
+
+    if (error) throw error
+    return { data, error: null }
+  } catch (error) {
+    return { data: null, error }
+  }
+}
+
+// Sign in with OTP
+export async function signInWithOTP(email: string) {
+  try {
+    const { data, error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?email=${encodeURIComponent(email)}`,
+      },
+    })
+
+    if (error) throw error
+    return { data, error: null }
+  } catch (error) {
+    return { data: null, error }
+  }
+}
+
+// Verify OTP
+export async function verifyOTP(email: string, token: string) {
+  try {
+    const { data, error } = await supabase.auth.verifyOtp({
+      email,
+      token,
+      type: 'signup',
+    })
+
+    if (error) throw error
+    return { data, error: null }
+  } catch (error) {
+    return { data: null, error }
+  }
+}
+
+// Sign in with email and password (after email verification)
+export async function signInWithEmail(email: string, password: string) {
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+
+    if (error) throw error
+    return { data, error: null }
+  } catch (error) {
+    return { data: null, error }
+  }
+}
+
+// Sign out
+export async function signOut() {
+  try {
+    const { error } = await supabase.auth.signOut()
+    if (error) throw error
+    return { error: null }
+  } catch (error) {
+    return { error }
+  }
+}
+
+// Get current user
+export async function getCurrentUser() {
+  try {
+    const { data: { user }, error } = await supabase.auth.getUser()
+    if (error) throw error
+    return { user, error: null }
+  } catch (error) {
+    return { user: null, error }
+  }
+}
+
 export type Database = {
   public: {
     Tables: {

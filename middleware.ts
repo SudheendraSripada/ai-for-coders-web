@@ -29,7 +29,7 @@ export async function middleware(req: NextRequest) {
   } = await supabase.auth.getSession()
 
   const protectedPaths = ['/dashboard']
-  const authPaths = ['/auth/login', '/auth/signup', '/auth/email-password', '/auth/otp', '/auth/otp-verify']
+  const authPaths = ['/auth/login', '/auth/signup', '/auth/email-password', '/auth/otp', '/auth/otp-verify', '/auth/callback']
   const onboardingPath = '/auth/onboarding'
 
   const isProtectedPath = protectedPaths.some(path => req.nextUrl.pathname.startsWith(path))
@@ -59,6 +59,7 @@ export const config = {
     '/auth/email-password',
     '/auth/otp',
     '/auth/otp-verify',
+    '/auth/callback',
     '/auth/onboarding'
   ]
 }

@@ -26,22 +26,12 @@ export default function OtpVerifyForm() {
     }
 
     try {
-      const response = await fetch('/api/auth/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, otp })
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Invalid OTP')
-      }
-
-      router.push('/auth/onboarding')
+      // Instead of using verify-otp API, redirect to callback with OTP
+      // This will handle both OTP verification and email verification
+      const callbackUrl = `/auth/callback?email=${encodeURIComponent(email)}&token=${encodeURIComponent(otp)}&type=otp`
+      router.push(callbackUrl)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
-    } finally {
       setLoading(false)
     }
   }
