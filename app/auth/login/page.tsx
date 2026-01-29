@@ -123,6 +123,12 @@ export default function LoginPage() {
             Sign up
           </Link>
         </p>
+        <p className="text-center text-sm text-gray-600">
+          Or{' '}
+          <Link href="/auth/magic-link" className="font-semibold text-indigo-600 hover:text-indigo-500">
+            login with a magic link
+          </Link>
+        </p>
       </form>
     </AuthForm>
   )

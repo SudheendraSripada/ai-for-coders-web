@@ -16,8 +16,8 @@ export async function POST(request: NextRequest) {
       email,
       password,
       options: {
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`
-      }
+        emailRedirectTo: 'https://ai-for-coders-web-pi.vercel.app/welcome',
+      },
     })
 
     if (error) {

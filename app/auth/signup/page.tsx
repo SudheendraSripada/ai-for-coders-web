@@ -61,7 +61,7 @@ export default function SignUpPage() {
         throw new Error(data.error || 'Failed to create account')
       }
 
-      router.push('/auth/onboarding')
+      router.push('/verify-email')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
@@ -163,6 +163,12 @@ export default function SignUpPage() {
           Already have an account?{' '}
           <Link href="/auth/login" className="font-semibold text-indigo-600 hover:text-indigo-500">
             Log in
+          </Link>
+        </p>
+        <p className="text-center text-sm text-gray-600">
+          Or{' '}
+          <Link href="/auth/magic-link" className="font-semibold text-indigo-600 hover:text-indigo-500">
+            sign up with a magic link
           </Link>
         </p>
       </form>
