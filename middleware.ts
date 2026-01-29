@@ -1,3 +1,18 @@
+/**
+ * Next.js Middleware for Authentication
+ * 
+ * NOTE: Next.js 16 shows a deprecation warning suggesting "proxy" pattern.
+ * However, middleware.ts is still the standard and fully supported approach.
+ * The "proxy" pattern is experimental and not yet recommended for production.
+ * 
+ * This middleware:
+ * - Protects routes that require authentication
+ * - Redirects authenticated users away from auth pages
+ * - Handles cookie-based session management (SSR-safe, Vercel-safe)
+ * - Works with Supabase Auth using the @supabase/ssr package
+ * 
+ * The warning can be safely ignored until Next.js provides clear migration path.
+ */
 import { NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import type { NextRequest } from 'next/server'

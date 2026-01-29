@@ -15,51 +15,24 @@ function ConfirmPageContent() {
   useEffect(() => {
     const handleConfirmation = async () => {
       try {
-        const code = searchParams.get('code')
         const tokenHash = searchParams.get('token_hash')
         const type = searchParams.get('type')
 
         const supabase = createClient()
 
-        // Format A: ?code=XXXX (email confirmation)
-        if (code) {
-          console.log('Exchanging code for session')
-          const { error: authError } = await supabase.auth.exchangeCodeForSession(code)
-          if (authError) throw authError
+        // Email confirmation links from Supabase come with token_hash parameter
+        // NEVER use exchangeCodeForSession() for email confirmations - that's ONLY for OAuth flows
+        
+        // Handle email confirmation with token_hash (standard Supabase email links)
+        if (tokenHash && type) {
+          console.log('Verifying email with token_hash, type:', type)
           
-          // Create user profile if needed
-          const { data: { user } } = await supabase.auth.getUser()
-          if (user) {
-            const { data: existingProfile } = await supabase
-              .from('user_profiles')
-              .select('*')
-              .eq('id', user.id)
-              .single()
-
-            if (!existingProfile) {
-              await supabase
-                .from('user_profiles')
-                .insert({
-                  id: user.id,
-                  email: user.email!,
-                  full_name: user.user_metadata?.full_name || null,
-                  experience_level: null,
-                  learning_goals: null
-                })
-            }
-          }
-          
-          router.push('/welcome')
-          return
-        }
-
-        // Format B: ?token_hash=XXXX&type=signup (OTP/Magic link)
-        if (tokenHash && type === 'signup') {
-          console.log('Verifying OTP with token_hash')
+          // Use verifyOtp for email confirmations (works cross-device)
           const { error: verifyError } = await supabase.auth.verifyOtp({
             token_hash: tokenHash,
-            type: 'signup',
+            type: type as any,
           })
+          
           if (verifyError) throw verifyError
           
           // Create user profile if needed
@@ -84,33 +57,23 @@ function ConfirmPageContent() {
             }
           }
           
-          router.push('/welcome')
+          // Don't manually redirect - let AuthProvider handle navigation
+          setLoading(false)
           return
         }
 
-        // Format C: Magic link with email type
-        if (tokenHash && type === 'magiclink') {
-          console.log('Verifying magic link')
-          const { error: verifyError } = await supabase.auth.verifyOtp({
-            token_hash: tokenHash,
-            type: 'magiclink',
-          })
-          if (verifyError) throw verifyError
-          router.push('/welcome')
-          return
-        }
-
-        // No valid params - check if already authenticated
+        // No token_hash - check if user is already authenticated (email already verified)
         const { data: { session } } = await supabase.auth.getSession()
         if (session?.user.email_confirmed_at) {
+          console.log('Email already confirmed, redirecting to welcome')
           router.push('/welcome')
         } else {
-          setError('Invalid confirmation link or already used')
+          setError('Invalid or expired confirmation link. Please request a new confirmation email.')
           setLoading(false)
         }
       } catch (err: any) {
         console.error('Confirmation error:', err)
-        setError(err.message || 'Confirmation failed')
+        setError(err.message || 'Email confirmation failed. Please try again or contact support.')
         setLoading(false)
       }
     }
