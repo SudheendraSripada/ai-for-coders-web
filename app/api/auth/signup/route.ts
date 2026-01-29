@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
       email,
       password,
       options: {
-        emailRedirectTo: 'https://ai-for-coders-web-pi.vercel.app/welcome',
+        emailRedirectTo: 'https://ai-for-coders-web-pi.vercel.app/auth/confirm',
       },
     })
 

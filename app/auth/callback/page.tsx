@@ -84,21 +84,22 @@ function AuthCallbackContent() {
           }
         }
 
-        // Handle email verification via code
+        // Handle OAuth code exchange (Google, GitHub, etc.)
+        // NOTE: exchangeCodeForSession is ONLY for OAuth flows, NOT email confirmations
         if (code) {
-          console.log('Exchanging code for session:', code)
+          console.log('Exchanging OAuth code for session:', code)
           
           const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
           
           if (exchangeError) {
-            console.error('Code exchange error:', exchangeError)
+            console.error('OAuth code exchange error:', exchangeError)
             setStatus('error')
-            setMessage(`Verification failed: ${exchangeError.message}`)
+            setMessage(`OAuth verification failed: ${exchangeError.message}`)
             return
           }
 
           if (data.user && data.session) {
-            console.log('User verified successfully:', data.user.email)
+            console.log('OAuth user authenticated successfully:', data.user.email)
             
             // Create user profile if it doesn't exist
             const { data: existingProfile } = await supabase
@@ -124,7 +125,7 @@ function AuthCallbackContent() {
             }
 
             setStatus('success')
-            setMessage('Email verified successfully! Redirecting...')
+            setMessage('Authentication successful! Redirecting...')
             
             setTimeout(() => {
               router.push('/welcome')
