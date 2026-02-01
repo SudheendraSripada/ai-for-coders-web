@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "type-check": "tsc --noEmit"
+    "clawbot:check": "npm run lint && npm run build",
+    "clawbot:dev": "npm run dev"
+
   },
   "dependencies": {
     "@supabase/auth-helpers-nextjs": "^0.15.0",

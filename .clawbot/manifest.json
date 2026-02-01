@@ -1,0 +1,9 @@
+{
+  "name": "ai-for-coders-web",
+  "role": "frontend",
+  "framework": "nextjs",
+  "backend_expected": true,
+  "database": "supabase",
+  "auto_fix_allowed": true
+}
+
